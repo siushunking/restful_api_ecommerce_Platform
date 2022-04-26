@@ -1,14 +1,16 @@
 const Product = require('../models/product');
 
 
-exports.getProducts = (req, res, next) => {
-  Product.findAll()
-    .then(products => {
-      res.send(JSON.stringify(products[0]));
-    })
-    .catch(err => {
-      console.log(err);
-    });
+exports.getProducts = async (req, res, next) => {
+  const page = req.query.page || 1;
+  const per_page = 2;
+  const startIndex = (page -1) * per_page;  
+  const endIndex = startIndex+ per_page;
+
+  const products = await Product.findAll()
+  const result = products.slice(startIndex,endIndex) 
+
+  res.json(result)
 };
 
 exports.getProduct = (req, res, next) => {
